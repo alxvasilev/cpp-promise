@@ -32,12 +32,11 @@ Therefore, there need to be enough slots in that chain linking promise. This is 
 because the promises returned by handlers don't have any handlers attached. Handlers are usually
 attached when chaining promises. This, however, may not be the case, if the handler itself contains
 a promise chain, and returns a promise that is not at its end. This is a very exotic case, and is still
-perfectly fine with a reasonable number of handlers attached to each of the two promises. Iny any case,
+perfectly fine with a reasonable number of handlers attached to each of the two promises. In any case,
 checks are performed in both debug and release mode and an exception is thrown if callback slots are
 exhausted. The exception is of type `std::runtime_error` and an informative message. Please let me know
 if the fixed maximum of handlers is a problem for you. If it turns our to be cumbersome for many users,
-I will consider switching to dynamic lists.
-
+I will consider switching to dynamic lists.  
 You can increase the default globally by defining PROMISE_MAX_HANDLE_COUNT before including `promise.hpp`. However, this define-before-include order has to be taken care of for each compilation unit.
 This may be cumbersome, if done at the source code level. A better option could be to add the define to the
 build system of your application, so that all compilation units will have it specified, and it will always be defined before any code is preprocessed/compiled.
