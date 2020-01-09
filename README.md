@@ -1,4 +1,4 @@
-## Javascript-like C++ promise library
+# Javascript-like C++ promise library
 
 This library provides a `Promise` class that aims to mimic the behavior of the typical
 JavaScript promise object. It does not implement any particular Javascript standard promise
@@ -10,11 +10,15 @@ but schedules the calls on the next message loop iteration. The same happens whe
 is attached to an already resolved/rejected promise. This may be a bit less efficient, but makes the behavior symmetric and more predictable. This library resolves synchronously, because it is unaware of the
 message loop that is used in the application.
 
+## Compatibility
+This library should be compatible with gcc >= 4.9, clang >= 3.3 and Visual Studio >= 2015
+
+# API
 A brief overview of the API follows. For practical usage examples and details on the behavior,
 please see the included tests in `tests/promise-test.cpp`
 
 ## The Promise<T, L> class
-Intuitively, the T class is the type of the value, held by the promise object. It can be `void` as well.
+Intuitively, the `T` class is the type of the value, held by the promise object. It can be `void` as well.
 
 As for what `L` is - some explanation is needed. When `.then()` and `.fail()` handlers
 are attached to a promise, they are added to internal lists. For performance reasons,
@@ -34,10 +38,10 @@ attached when chaining promises. This, however, may not be the case, if the hand
 a promise chain, and returns a promise that is not at its end. This is a very exotic case, and is still
 perfectly fine with a reasonable number of handlers attached to each of the two promises. In any case,
 checks are performed in both debug and release mode and an exception is thrown if callback slots are
-exhausted. The exception is of type `std::runtime_error` and an informative message. Please let me know
+exhausted. The exception is of type `std::runtime_error` and has an informative message. Please let me know
 if the fixed maximum of handlers is a problem for you. If it turns our to be cumbersome for many users,
 I will consider switching to dynamic lists.  
-You can increase the default globally by defining PROMISE_MAX_HANDLE_COUNT before including `promise.hpp`. However, this define-before-include order has to be taken care of for each compilation unit.
+You can increase the default globally by defining `PROMISE_MAX_HANDLE_COUNT` before including `promise.hpp`. However, this define-before-include order has to be taken care of for each compilation unit.
 This may be cumbersome, if done at the source code level. A better option could be to add the define to the
 build system of your application, so that all compilation units will have it specified, and it will always be defined before any code is preprocessed/compiled.
 You can also define it per object by overriding the template parameter. This can be done in specific
@@ -94,7 +98,8 @@ Convenience methods to check the state of the promise.
 Returns the Error object with which the promise was rejected. If the promise is not in `kRejected` state, an assertion is triggered. Therefore, this method should only be called after a check if the promise is actually
 in rejected state.
 
-### `static Promise::when(...), static Promise::when(std::vector<Promise<P>>)`
+### `static Promise<void> Promise::when(...)`
+### `static Promise<void> Promise::when(std::vector<Promise<P>>)`
 Returns a Promise<void> that is:
  - Resolved when all the provided promises are resolved.
  - Rejected if at least one of the provided promises is rejected.

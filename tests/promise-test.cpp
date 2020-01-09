@@ -1,6 +1,7 @@
 /**
  @author Alexander Vassilev
- @license BSD 2-Clause "Simplified" License 
+ @copyright MEGA Limited, 2014
+ @license BSD 2-Clause "Simplified" License
 */
 
 //#define TESTLOOP_LOG_DONES

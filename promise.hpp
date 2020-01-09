@@ -1,5 +1,6 @@
 /**
  @author Alexander Vassilev
+ @copyright MEGA Limited, 2014
  @license BSD 2-Clause "Simplified" License
 */
 
