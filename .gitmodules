@@ -1,0 +1,3 @@
+[submodule "async-test"]
+	path = async-test
+	url = git@github.com:alxvasilev/async-test.git
