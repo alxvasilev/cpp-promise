@@ -1,5 +1,5 @@
-promise-test: promise-test.cpp
-	g++ -I.. -Iasync-test/include promise-test.cpp -o ./promise-test
+promise-test: ../promise.hpp async-test/include/*
+	g++ -std=c++11 -O0 -g -fsanitize=address -I.. -Iasync-test/include promise-test.cpp -o ./promise-test
 all: promise-test
 clean:
 	rm -f ./promise-test
