@@ -12,6 +12,10 @@
 #include <memory>
 #include <assert.h>
 
+#ifndef PROMISE_MAX_HANDLER_COUNT
+    #define PROMISE_MAX_HANDLER_COUNT 4
+#endif
+
 /** @brief The name of the unhandled promise error handler. This handler is
  * called when a promise fails, but the user has not provided a fail() callback
  * to handle that error. Often this is unintentional and results in the program
@@ -208,7 +212,7 @@ public:
 struct _Empty{};
 typedef _Empty Empty;
 
-template<typename T, int L=4>
+template<typename T, int L=PROMISE_MAX_HANDLER_COUNT>
 class Promise: public PromiseBase
 {
 public:

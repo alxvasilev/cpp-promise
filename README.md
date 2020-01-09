@@ -14,21 +14,39 @@ A brief overview of the API follows. For practical usage examples and details on
 please see the included tests in `tests/promise-test.cpp`
 
 ## The Promise<T, L> class
-### Template parameters
 Intuitively, the T class is the type of the value, held by the promise object. It can be `void` as well.
 
 As for what `L` is - some explanation is needed. When `.then()` and `.fail()` handlers
 are attached to a promise, they are added to internal lists. For performance reasons,
-these lists are implemented as static arrays. This avoids dynamic memory 
-allocation and deallocation when promise objects are created and destroyed. This comes at
-the cost of having a fixed limit of `.then` and `.fail` handlers that can be attached to
-a _single_ promise object. Note that this does not affect the promise chain length. This limit
-applies only to multiple handlers of each type, attached to a single Promise object.
-Rarely more than one or two handlers of each type are used. The `L` constant is the size of 
-these arrays, and its default value is 4. You can currently increase it only per-promise by overriding
-the default value for the L parameter.
+these lists are implemented as static arrays. The `L` constant is the size of 
+these arrays, and its default value is 4. This avoids some dynamic memory allocation and deallocation
+when promise objects are created and destroyed. This comes at the cost of having a fixed limit of
+`.then` and `.fail` handlers that can be attached to a _single_ promise object.
+Note that this does not affect the promise chain length, but only the number of chains a promise can
+"fork". Also, when a `.then()` or `.fail()` callback is executed, the actual promise that it returns
+is "merged" with the "placeholder" promise that was returned by the `.then()` / `.fail()` method
+at the time the promise chain was set up (usually before anything has yet executed).
+This "merge" operation moves all handlers, that may be attached to the returned promise,
+to the "placeholder", i.e. chain linking promise.
+Therefore, there need to be enough slots in that chain linking promise. This is usually not an issue,
+because the promises returned by handlers don't have any handlers attached. Handlers are usually
+attached when chaining promises. This, however, may not be the case, if the handler itself contains
+a promise chain, and returns a promise that is not at its end. This is a very exotic case, and is still
+perfectly fine with a reasonable number of handlers attached to each of the two promises. Iny any case,
+checks are performed in both debug and release mode and an exception is thrown if callback slots are
+exhausted. The exception is of type `std::runtime_error` and an informative message. Please let me know
+if the fixed maximum of handlers is a problem for you. If it turns our to be cumbersome for many users,
+I will consider switching to dynamic lists.
 
-### Lifetime
+You can increase the default globally by defining PROMISE_MAX_HANDLE_COUNT before including `promise.hpp`. However, this define-before-include order has to be taken care of for each compilation unit.
+This may be cumbersome, if done at the source code level. A better option could be to add the define to the
+build system of your application, so that all compilation units will have it specified, and it will always be defined before any code is preprocessed/compiled.
+You can also define it per object by overriding the template parameter. This can be done in specific
+use cases where it is known that a lot of handlers will be attached to that promise object. However, this is
+currently not well supported, since L is not passed to the promise types returned by `.then()`, `.fail()`, etc.
+This may lead to compile errors.
+
+### Lifetime of Promise objects
 The Promise object is internally reference counted, so copying it is very lightweight and its lifetime is
 automatically managed. Normally you don't need to create Promise objects on the heap with `operator new`, and
 pass them by pointers. They are designed to be allocated on the stack or as a member.
@@ -77,7 +95,7 @@ Convenience methods to check the state of the promise.
 Returns the Error object with which the promise was rejected. If the promise is not in `kRejected` state, an assertion is triggered. Therefore, this method should only be called after a check if the promise is actually
 in rejected state.
 
-### `Promise::when(...), Promise::when(std::vector<Promise<P>>)`
+### `static Promise::when(...), static Promise::when(std::vector<Promise<P>>)`
 Returns a Promise<void> that is:
  - Resolved when all the provided promises are resolved.
  - Rejected if at least one of the provided promises is rejected.
