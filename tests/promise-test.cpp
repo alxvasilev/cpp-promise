@@ -10,7 +10,7 @@
 
 #include <asyncTest.hpp>
 #define PROMISE_ON_UNHANDLED_ERROR testUnhandledError
-#include "promise.hpp"
+#include <promise.hpp>
 
 TESTS_INIT();
 using namespace promise;
