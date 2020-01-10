@@ -19,6 +19,9 @@ This is a header-only library, consisting of just one header - promise.hpp. You 
 ## Compatibility
 This library should be compatible with gcc >= 4.9, clang >= 3.3 and Visual Studio >= 2015
 
+## Tests
+To run the tests, you need `make`, and you need to have cloned this repository with the --recursive switch (as noted in the installation section), in order to have the unit test framework. Open a console in the `tests` subdir and type `make run`. The test suite should build and run.
+
 # API
 A brief overview of the API follows. For practical usage examples and details on the behavior,
 please see the included tests in `tests/promise-test.cpp`
