@@ -20,7 +20,7 @@ This is a header-only library, consisting of just one header - promise.hpp. You 
 This library should be compatible with gcc >= 4.9, clang >= 3.3 and Visual Studio >= 2015
 
 ## Tests
-To run the tests with the provided `Makefile`, you need `make`, `gcc` or `clang`, and you need to have cloned this repository with the --recursive switch (as noted in the installation section), in order to have the unit test framework. Open a console in the `tests` subdir and type `make run`. The test suite should build and run.
+A test suite is included, together with a submodule for the `async-test` framework that is used for the test suite. See the Readme.md in the `tests` subdirectory for details how to run and build the tests.
 
 # API
 A brief overview of the API follows. For practical usage examples and details on the behavior,
