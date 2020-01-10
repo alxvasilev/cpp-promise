@@ -10,6 +10,12 @@ but schedules the calls on the next message loop iteration. The same happens whe
 is attached to an already resolved/rejected promise. This may be a bit less efficient, but makes the behavior symmetric and more predictable. This library resolves synchronously, because it is unaware of the
 message loop that is used in the application.
 
+## Installation
+You need to clone this repository with the `--recursive` switch if you want to run the tests. This is because the test framework - `async-test`, is included as a submodule.
+
+## Usage
+This is a header-only library, consisting of just one header - promise.hpp. You only need to include that header in your code. There are no dependencies on other files from this repository, so you can copy promise.hpp to your project tree and use it from there.
+
 ## Compatibility
 This library should be compatible with gcc >= 4.9, clang >= 3.3 and Visual Studio >= 2015
 
